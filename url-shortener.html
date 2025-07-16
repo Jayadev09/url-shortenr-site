@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickLink - Free URL Shortener</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+        }
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            background: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 16px;
+        }
+        a {
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔗 QuickLink</h1>
+        <p>Shorten your long URLs instantly and for free!</p>
+        <input type="text" id="longurl" placeholder="Enter your long URL here" />
+        <br>
+        <button onclick="shortenURL()">Shorten URL</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        async function shortenURL() {
+            const longUrl = document.getElementById("longurl").value;
+            if (!longUrl) {
+                document.getElementById("result").innerHTML = "❗ Please enter a valid URL.";
+                return;
+            }
+            try {
+                const res = await fetch(`https://api.shrtco.de/v2/shorten?url=${encodeURIComponent(longUrl)}`);
+                const data = await res.json();
+                if (data.ok) {
+                    document.getElementById("result").innerHTML = `✅ Short URL: <a href="${data.result.full_short_link}" target="_blank">${data.result.full_short_link}</a>`;
+                } else {
+                    document.getElementById("result").innerHTML = "❌ Error: " + data.error;
+                }
+            } catch (err) {
+                document.getElementById("result").innerHTML = "⚠️ Failed to shorten URL. Please try again.";
+            }
+        }
+    </script>
+</body>
+</html>
